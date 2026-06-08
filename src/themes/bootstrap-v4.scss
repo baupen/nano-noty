@@ -8,29 +8,6 @@
   .noty_body {
 	padding: .75rem 1.25rem;
   }
-
-  .noty_buttons {
-	padding: 10px;
-  }
-
-  .noty_close_button {
-	font-size: 1.5rem;
-	font-weight: 700;
-	line-height: 1;
-	color: #000;
-	text-shadow: 0 1px 0 #fff;
-	filter: alpha(opacity=20);
-	opacity: .5;
-	background: transparent;
-  }
-
-  .noty_close_button:hover {
-	background: transparent;
-	text-decoration: none;
-	cursor: pointer;
-	filter: alpha(opacity=50);
-	opacity: .75;
-  }
 }
 
 .noty_theme__bootstrap-v4.noty_type__alert,

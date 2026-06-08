@@ -4,15 +4,13 @@ import 'noty.scss'
 import Promise from 'es6-promise'
 import * as Utils from 'utils'
 import * as API from 'api'
-import { NotyButton } from 'button'
-import { Push } from 'push'
 
 export default class Noty {
   /**
    * @param {object} options
    * @return {Noty}
    */
-  constructor (options = {}) {
+  constructor(options = {}) {
     this.options = Utils.deepExtend({}, API.Defaults, options)
 
     if (API.Store[this.options.id]) {
@@ -28,44 +26,10 @@ export default class Noty {
     this.shown = false
     this.closed = false
     this.closing = false
-    this.killable = this.options.timeout || this.options.closeWith.length > 0
-    this.hasSound = this.options.sounds.sources.length > 0
-    this.soundPlayed = false
-    this.listeners = {
-      beforeShow: [],
-      onShow: [],
-      afterShow: [],
-      onClose: [],
-      afterClose: [],
-      onClick: [],
-      onHover: [],
-      onTemplate: []
-    }
     this.promises = {
       show: null,
       close: null
     }
-    this.on('beforeShow', this.options.callbacks.beforeShow)
-    this.on('onShow', this.options.callbacks.onShow)
-    this.on('afterShow', this.options.callbacks.afterShow)
-    this.on('onClose', this.options.callbacks.onClose)
-    this.on('afterClose', this.options.callbacks.afterClose)
-    this.on('onClick', this.options.callbacks.onClick)
-    this.on('onHover', this.options.callbacks.onHover)
-    this.on('onTemplate', this.options.callbacks.onTemplate)
-
-    return this
-  }
-
-  /**
-   * @param {string} eventName
-   * @param {function} cb
-   * @return {Noty}
-   */
-  on (eventName, cb = () => {}) {
-    if (typeof cb === 'function' && this.listeners.hasOwnProperty(eventName)) {
-      this.listeners[eventName].push(cb)
-    }
 
     return this
   }
@@ -73,46 +37,22 @@ export default class Noty {
   /**
    * @return {Noty}
    */
-  show () {
+  show() {
     if (this.showing || this.shown) {
       return this // preventing multiple show
     }
 
-    if (this.options.killer === true) {
-      Noty.closeAll()
-    } else if (typeof this.options.killer === 'string') {
-      Noty.closeAll(this.options.killer)
-    }
-
-    let queueCounts = API.getQueueCounts(this.options.queue)
+    let queueCounts = API.Queue.queue.length
 
     if (
-      queueCounts.current >= queueCounts.maxVisible ||
-      (API.PageHidden && this.options.visibilityControl)
+      queueCounts.current >= queueCounts.maxVisible
     ) {
       API.addToQueue(this)
-
-      if (
-        API.PageHidden &&
-        this.hasSound &&
-        Utils.inArray('docHidden', this.options.sounds.conditions)
-      ) {
-        Utils.createAudioElements(this)
-      }
-
-      if (
-        API.PageHidden &&
-        Utils.inArray('docHidden', this.options.titleCount.conditions)
-      ) {
-        API.docTitle.increment()
-      }
 
       return this
     }
 
     API.Store[this.id] = this
-
-    API.fire(this, 'beforeShow')
 
     this.showing = true
 
@@ -122,63 +62,25 @@ export default class Noty {
     }
 
     API.build(this)
-    API.handleModal(this)
 
-    if (this.options.force) {
+    if (this.options.first) {
       this.layoutDom.insertBefore(this.barDom, this.layoutDom.firstChild)
     } else {
       this.layoutDom.appendChild(this.barDom)
     }
 
-    if (
-      this.hasSound &&
-      !this.soundPlayed &&
-      Utils.inArray('docVisible', this.options.sounds.conditions)
-    ) {
-      Utils.createAudioElements(this)
-    }
-
-    if (Utils.inArray('docVisible', this.options.titleCount.conditions)) {
-      API.docTitle.increment()
-    }
-
     this.shown = true
     this.closed = false
 
-    // bind button events if any
-    if (API.hasButtons(this)) {
-      Object.keys(this.options.buttons).forEach(key => {
-        const btn = this.barDom.querySelector(
-          `#${this.options.buttons[key].id}`
-        )
-        Utils.addListener(btn, 'click', e => {
-          Utils.stopPropagation(e)
-          this.options.buttons[key].cb(this)
-        })
-      })
-    }
-
     this.progressDom = this.barDom.querySelector('.noty_progressbar')
 
-    if (Utils.inArray('click', this.options.closeWith)) {
-      Utils.addClass(this.barDom, 'noty_close_with_click')
-      Utils.addListener(
-        this.barDom,
-        'click',
-        e => {
-          Utils.stopPropagation(e)
-          API.fire(this, 'onClick')
-          this.close()
-        },
-        false
-      )
-    }
-
+    Utils.addClass(this.barDom, 'noty_close_with_click')
     Utils.addListener(
       this.barDom,
-      'mouseenter',
-      () => {
-        API.fire(this, 'onHover')
+      'click',
+      e => {
+        Utils.stopPropagation(e)
+        this.close()
       },
       false
     )
@@ -187,27 +89,6 @@ export default class Noty {
     if (this.options.progressBar) {
       Utils.addClass(this.barDom, 'noty_has_progressbar')
     }
-
-    if (Utils.inArray('button', this.options.closeWith)) {
-      Utils.addClass(this.barDom, 'noty_close_with_button')
-
-      const closeButton = document.createElement('div')
-      Utils.addClass(closeButton, 'noty_close_button')
-      closeButton.innerHTML = '×'
-      this.barDom.appendChild(closeButton)
-
-      Utils.addListener(
-        closeButton,
-        'click',
-        e => {
-          Utils.stopPropagation(e)
-          this.close()
-        },
-        false
-      )
-    }
-
-    API.fire(this, 'onShow')
 
     if (this.options.animation.open === null) {
       this.promises.show = new Promise(resolve => {
@@ -241,7 +122,7 @@ export default class Noty {
   /**
    * @return {Noty}
    */
-  stop () {
+  stop() {
     API.dequeueClose(this)
     return this
   }
@@ -249,7 +130,7 @@ export default class Noty {
   /**
    * @return {Noty}
    */
-  resume () {
+  resume() {
     API.queueClose(this)
     return this
   }
@@ -258,7 +139,7 @@ export default class Noty {
    * @param {int|boolean} ms
    * @return {Noty}
    */
-  setTimeout (ms) {
+  setTimeout(ms) {
     this.stop()
     this.options.timeout = ms
 
@@ -287,7 +168,7 @@ export default class Noty {
    * @param {boolean} optionsOverride
    * @return {Noty}
    */
-  setText (html, optionsOverride = false) {
+  setText(html, optionsOverride = false) {
     if (this.barDom) {
       this.barDom.querySelector('.noty_body').innerHTML = html
     }
@@ -302,7 +183,7 @@ export default class Noty {
    * @param {boolean} optionsOverride
    * @return {Noty}
    */
-  setType (type, optionsOverride = false) {
+  setType(type, optionsOverride = false) {
     if (this.barDom) {
       let classList = Utils.classList(this.barDom).split(' ')
 
@@ -325,7 +206,7 @@ export default class Noty {
    * @param {boolean} optionsOverride
    * @return {Noty}
    */
-  setTheme (theme, optionsOverride = false) {
+  setTheme(theme, optionsOverride = false) {
     if (this.barDom) {
       let classList = Utils.classList(this.barDom).split(' ')
 
@@ -346,7 +227,7 @@ export default class Noty {
   /**
    * @return {Noty}
    */
-  close () {
+  close() {
     if (this.closed) return this
 
     if (!this.shown) {
@@ -354,8 +235,6 @@ export default class Noty {
       API.removeFromQueue(this)
       return this
     }
-
-    API.fire(this, 'onClose')
 
     this.closing = true
 
@@ -371,7 +250,7 @@ export default class Noty {
       Utils.addClass(this.barDom, this.options.animation.close)
       this.promises.close = new Promise(resolve => {
         Utils.addListener(this.barDom, Utils.animationEndEvents, () => {
-          if (this.options.force) {
+          if (this.options.first) {
             Utils.remove(this.barDom)
           } else {
             API.ghostFix(this)
@@ -383,7 +262,6 @@ export default class Noty {
 
     this.promises.close.then(() => {
       API.closeFlow(this)
-      API.handleModalClose(this)
     })
 
     this.closed = true
@@ -394,100 +272,38 @@ export default class Noty {
   // API functions
 
   /**
-   * @param {boolean|string} queueName
    * @return {Noty}
    */
-  static closeAll (queueName = false) {
+  static closeAll() {
     Object.keys(API.Store).forEach(id => {
-      if (queueName) {
-        if (
-          API.Store[id].options.queue === queueName && API.Store[id].killable
-        ) {
-          API.Store[id].close()
-        }
-      } else if (API.Store[id].killable) {
-        API.Store[id].close()
-      }
+      API.Store[id].close()
     })
     return this
   }
 
   /**
-   * @param {string} queueName
    * @return {Noty}
    */
-  static clearQueue (queueName = 'global') {
-    if (API.Queues.hasOwnProperty(queueName)) {
-      API.Queues[queueName].queue = []
-    }
+  static clearQueue() {
+    API.Queue.queue = []
     return this
-  }
-
-  /**
-   * @return {API.Queues}
-   */
-  static get Queues () {
-    return API.Queues
-  }
-
-  /**
-   * @return {API.PageHidden}
-   */
-  static get PageHidden () {
-    return API.PageHidden
   }
 
   /**
    * @param {Object} obj
    * @return {Noty}
    */
-  static overrideDefaults (obj) {
+  static overrideDefaults(obj) {
     API.Defaults = Utils.deepExtend({}, API.Defaults, obj)
     return this
   }
 
   /**
    * @param {int} amount
-   * @param {string} queueName
    * @return {Noty}
    */
-  static setMaxVisible (amount = API.DefaultMaxVisible, queueName = 'global') {
-    if (!API.Queues.hasOwnProperty(queueName)) {
-      API.Queues[queueName] = {maxVisible: amount, queue: []}
-    }
-
-    API.Queues[queueName].maxVisible = amount
+  static setMaxVisible(amount = API.DefaultMaxVisible) {
+    API.Queue.maxVisible = amount
     return this
   }
-
-  /**
-   * @param {string} innerHtml
-   * @param {String} classes
-   * @param {Function} cb
-   * @param {Object} attributes
-   * @return {NotyButton}
-   */
-  static button (innerHtml, classes = null, cb, attributes = {}) {
-    return new NotyButton(innerHtml, classes, cb, attributes)
-  }
-
-  /**
-   * @return {string}
-   */
-  static version () {
-    return VERSION
-  }
-
-  /**
-   * @param {String} workerPath
-   * @return {Push}
-   */
-  static Push (workerPath) {
-    return new Push(workerPath)
-  }
-}
-
-// Document visibility change controller
-if (typeof window !== 'undefined') {
-  Utils.visibilityChangeFlow()
 }
