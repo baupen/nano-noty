@@ -1,61 +1,10 @@
 import * as Utils from 'utils'
 
-export let PageHidden = false
-export let DocModalCount = 0
-
-const DocTitleProps = {
-  originalTitle: null,
-  count: 0,
-  changed: false,
-  timer: -1
-}
-
-export const docTitle = {
-  increment: () => {
-    DocTitleProps.count++
-
-    docTitle._update()
-  },
-
-  decrement: () => {
-    DocTitleProps.count--
-
-    if (DocTitleProps.count <= 0) {
-      docTitle._clear()
-      return
-    }
-
-    docTitle._update()
-  },
-
-  _update: () => {
-    let title = document.title
-
-    if (!DocTitleProps.changed) {
-      DocTitleProps.originalTitle = title
-      document.title = `(${DocTitleProps.count}) ${title}`
-      DocTitleProps.changed = true
-    } else {
-      document.title = `(${DocTitleProps.count}) ${DocTitleProps.originalTitle}`
-    }
-  },
-
-  _clear: () => {
-    if (DocTitleProps.changed) {
-      DocTitleProps.count = 0
-      document.title = DocTitleProps.originalTitle
-      DocTitleProps.changed = false
-    }
-  }
-}
-
 export const DefaultMaxVisible = 5
 
-export const Queues = {
-  global: {
-    maxVisible: DefaultMaxVisible,
-    queue: []
-  }
+export const Queue = {
+  maxVisible: DefaultMaxVisible,
+  queue: []
 }
 
 export const Store = {}
@@ -67,114 +16,46 @@ export let Defaults = {
   text: '',
   timeout: false,
   progressBar: true,
-  closeWith: ['click'],
   animation: {
     open: 'noty_effects_open',
     close: 'noty_effects_close'
   },
   id: false,
-  force: false,
-  killer: false,
+  first: false,
   queue: 'global',
   container: false,
-  buttons: [],
-  callbacks: {
-    beforeShow: null,
-    onShow: null,
-    afterShow: null,
-    onClose: null,
-    afterClose: null,
-    onClick: null,
-    onHover: null,
-    onTemplate: null
-  },
-  sounds: {
-    sources: [],
-    volume: 1,
-    conditions: []
-  },
-  titleCount: {
-    conditions: []
-  },
-  modal: false,
-  visibilityControl: false
-}
-
-/**
- * @param {string} queueName
- * @return {object}
- */
-export function getQueueCounts (queueName = 'global') {
-  let count = 0
-  let max = DefaultMaxVisible
-
-  if (Queues.hasOwnProperty(queueName)) {
-    max = Queues[queueName].maxVisible
-    Object.keys(Store).forEach(i => {
-      if (Store[i].options.queue === queueName && !Store[i].closed) count++
-    })
-  }
-
-  return {
-    current: count,
-    maxVisible: max
-  }
 }
 
 /**
  * @param {Noty} ref
  * @return {void}
  */
-export function addToQueue (ref) {
-  if (!Queues.hasOwnProperty(ref.options.queue)) {
-    Queues[ref.options.queue] = {maxVisible: DefaultMaxVisible, queue: []}
-  }
-
-  Queues[ref.options.queue].queue.push(ref)
+export function addToQueue(ref) {
+  Queue.queue.push(ref)
 }
 
 /**
  * @param {Noty} ref
  * @return {void}
  */
-export function removeFromQueue (ref) {
-  if (Queues.hasOwnProperty(ref.options.queue)) {
-    const queue = []
-    Object.keys(Queues[ref.options.queue].queue).forEach(i => {
-      if (Queues[ref.options.queue].queue[i].id !== ref.id) {
-        queue.push(Queues[ref.options.queue].queue[i])
-      }
-    })
-    Queues[ref.options.queue].queue = queue
-  }
+export function removeFromQueue(ref) {
+  Queue.queue = Queue.queue.filter(i => i.id !== ref.id)
 }
 
 /**
- * @param {string} queueName
  * @return {void}
  */
-export function queueRender (queueName = 'global') {
-  if (Queues.hasOwnProperty(queueName)) {
-    const noty = Queues[queueName].queue.shift()
+export function queueRender() {
+    const noty = Queue.queue.shift()
 
     if (noty) noty.show()
-  }
-}
-
-/**
- * @return {void}
- */
-export function queueRenderAll () {
-  Object.keys(Queues).forEach(queueName => {
-    queueRender(queueName)
-  })
 }
 
 /**
  * @param {Noty} ref
  * @return {void}
  */
-export function ghostFix (ref) {
+export function ghostFix(ref) {
   const ghostID = Utils.generateID('ghost')
   let ghost = document.createElement('div')
   ghost.setAttribute('id', ghostID)
@@ -196,10 +77,10 @@ export function ghostFix (ref) {
  * @param {Noty} ref
  * @return {void}
  */
-export function build (ref) {
+export function build(ref) {
   findOrCreateContainer(ref)
 
-  const markup = `<div class="noty_body">${ref.options.text}</div>${buildButtons(ref)}<div class="noty_progressbar"></div>`
+  const markup = `<div class="noty_body">${ref.options.text}</div><div class="noty_progressbar"></div>`
 
   ref.barDom = document.createElement('div')
   ref.barDom.setAttribute('id', ref.id)
@@ -209,95 +90,13 @@ export function build (ref) {
   )
 
   ref.barDom.innerHTML = markup
-
-  fire(ref, 'onTemplate')
-}
-
-/**
- * @param {Noty} ref
- * @return {boolean}
- */
-export function hasButtons (ref) {
-  return !!(ref.options.buttons && Object.keys(ref.options.buttons).length)
-}
-
-/**
- * @param {Noty} ref
- * @return {string}
- */
-function buildButtons (ref) {
-  if (hasButtons(ref)) {
-    let buttons = document.createElement('div')
-    Utils.addClass(buttons, 'noty_buttons')
-
-    Object.keys(ref.options.buttons).forEach(key => {
-      buttons.appendChild(ref.options.buttons[key].dom)
-    })
-
-    ref.options.buttons.forEach(btn => {
-      buttons.appendChild(btn.dom)
-    })
-    return buttons.outerHTML
-  }
-  return ''
 }
 
 /**
  * @param {Noty} ref
  * @return {void}
  */
-export function handleModal (ref) {
-  if (ref.options.modal) {
-    if (DocModalCount === 0) {
-      createModal(ref)
-    }
-
-    DocModalCount++
-  }
-}
-
-/**
- * @param {Noty} ref
- * @return {void}
- */
-export function handleModalClose (ref) {
-  if (ref.options.modal && DocModalCount > 0) {
-    DocModalCount--
-
-    if (DocModalCount <= 0) {
-      const modal = document.querySelector('.noty_modal')
-
-      if (modal) {
-        Utils.removeClass(modal, 'noty_modal_open')
-        Utils.addClass(modal, 'noty_modal_close')
-        Utils.addListener(modal, Utils.animationEndEvents, () => {
-          Utils.remove(modal)
-        })
-      }
-    }
-  }
-}
-
-/**
- * @return {void}
- */
-function createModal () {
-  const body = document.querySelector('body')
-  const modal = document.createElement('div')
-  Utils.addClass(modal, 'noty_modal')
-  body.insertBefore(modal, body.firstChild)
-  Utils.addClass(modal, 'noty_modal_open')
-
-  Utils.addListener(modal, Utils.animationEndEvents, () => {
-    Utils.removeClass(modal, 'noty_modal_open')
-  })
-}
-
-/**
- * @param {Noty} ref
- * @return {void}
- */
-function findOrCreateContainer (ref) {
+function findOrCreateContainer(ref) {
   if (ref.options.container) {
     ref.layoutDom = document.querySelector(ref.options.container)
     return
@@ -320,7 +119,7 @@ function findOrCreateContainer (ref) {
  * @param {Noty} ref
  * @return {void}
  */
-export function queueClose (ref) {
+export function queueClose(ref) {
   if (ref.options.timeout) {
     if (ref.options.progressBar && ref.progressDom) {
       Utils.css(ref.progressDom, {
@@ -344,7 +143,7 @@ export function queueClose (ref) {
  * @param {Noty} ref
  * @return {void}
  */
-export function dequeueClose (ref) {
+export function dequeueClose(ref) {
   if (ref.options.timeout && ref.closeTimer) {
     clearTimeout(ref.closeTimer)
     ref.closeTimer = -1
@@ -360,25 +159,9 @@ export function dequeueClose (ref) {
 
 /**
  * @param {Noty} ref
- * @param {string} eventName
  * @return {void}
  */
-export function fire (ref, eventName) {
-  if (ref.listeners.hasOwnProperty(eventName)) {
-    ref.listeners[eventName].forEach(cb => {
-      if (typeof cb === 'function') {
-        cb.apply(ref)
-      }
-    })
-  }
-}
-
-/**
- * @param {Noty} ref
- * @return {void}
- */
-export function openFlow (ref) {
-  fire(ref, 'afterShow')
+export function openFlow(ref) {
   queueClose(ref)
 
   Utils.addListener(ref.barDom, 'mouseenter', () => {
@@ -394,11 +177,9 @@ export function openFlow (ref) {
  * @param {Noty} ref
  * @return {void}
  */
-export function closeFlow (ref) {
+export function closeFlow(ref) {
   delete Store[ref.id]
   ref.closing = false
-  fire(ref, 'afterClose')
-
   Utils.remove(ref.barDom)
 
   if (
@@ -408,12 +189,5 @@ export function closeFlow (ref) {
     Utils.remove(ref.layoutDom)
   }
 
-  if (
-    Utils.inArray('docVisible', ref.options.titleCount.conditions) ||
-    Utils.inArray('docHidden', ref.options.titleCount.conditions)
-  ) {
-    docTitle.decrement()
-  }
-
-  queueRender(ref.options.queue)
+  queueRender()
 }

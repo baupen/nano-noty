@@ -1,5 +1,3 @@
-import * as API from 'api'
-
 export const animationEndEvents = 'webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend'
 
 export function inArray (needle, haystack, argStrict) {
@@ -184,80 +182,6 @@ export function classList (element) {
     /\s+/gi,
     ' '
   )
-}
-
-export function visibilityChangeFlow () {
-  let hidden
-  let visibilityChange
-  if (typeof document.hidden !== 'undefined') {
-    // Opera 12.10 and Firefox 18 and later support
-    hidden = 'hidden'
-    visibilityChange = 'visibilitychange'
-  } else if (typeof document.msHidden !== 'undefined') {
-    hidden = 'msHidden'
-    visibilityChange = 'msvisibilitychange'
-  } else if (typeof document.webkitHidden !== 'undefined') {
-    hidden = 'webkitHidden'
-    visibilityChange = 'webkitvisibilitychange'
-  }
-
-  function onVisibilityChange () {
-    API.PageHidden = document[hidden]
-    handleVisibilityChange()
-  }
-
-  function onBlur () {
-    API.PageHidden = true
-    handleVisibilityChange()
-  }
-
-  function onFocus () {
-    API.PageHidden = false
-    handleVisibilityChange()
-  }
-
-  function handleVisibilityChange () {
-    if (API.PageHidden) stopAll()
-    else resumeAll()
-  }
-
-  function stopAll () {
-    setTimeout(
-      function () {
-        Object.keys(API.Store).forEach(id => {
-          if (API.Store.hasOwnProperty(id)) {
-            if (API.Store[id].options.visibilityControl) {
-              API.Store[id].stop()
-            }
-          }
-        })
-      },
-      100
-    )
-  }
-
-  function resumeAll () {
-    setTimeout(
-      function () {
-        Object.keys(API.Store).forEach(id => {
-          if (API.Store.hasOwnProperty(id)) {
-            if (API.Store[id].options.visibilityControl) {
-              API.Store[id].resume()
-            }
-          }
-        })
-        API.queueRenderAll()
-      },
-      100
-    )
-  }
-
-  if (visibilityChange) {
-    addListener(document, visibilityChange, onVisibilityChange)
-  }
-
-  addListener(window, 'blur', onBlur)
-  addListener(window, 'focus', onFocus)
 }
 
 export function createAudioElements (ref) {

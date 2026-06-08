@@ -141,25 +141,6 @@ $noty-corner-space: 20px !default;
   cursor: pointer;
 }
 
-.noty_close_button {
-  position: absolute;
-  top: 2px;
-  right: 2px;
-  font-weight: bold;
-  width: 20px;
-  height: 20px;
-  text-align: center;
-  line-height: 20px;
-  background-color: rgba(0, 0, 0, .05);
-  border-radius: 2px;
-  cursor: pointer;
-  transition: all .2s ease-out;
-}
-
-.noty_close_button:hover {
-  background-color: rgba(0, 0, 0, .1);
-}
-
 .noty_modal {
   position: fixed;
   width: 100%;
