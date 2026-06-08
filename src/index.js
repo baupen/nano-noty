@@ -90,21 +90,13 @@ export default class Noty {
       Utils.addClass(this.barDom, 'noty_has_progressbar')
     }
 
-    if (this.options.animation.open === null) {
-      this.promises.show = new Promise(resolve => {
+    Utils.addClass(this.barDom, this.options.animation.open)
+    this.promises.show = new Promise(resolve => {
+      Utils.addListener(this.barDom, 'animationend', () => {
+        Utils.removeClass(this.barDom, this.options.animation.open)
         resolve()
       })
-    } else if (typeof this.options.animation.open === 'function') {
-      this.promises.show = new Promise(this.options.animation.open.bind(this))
-    } else {
-      Utils.addClass(this.barDom, this.options.animation.open)
-      this.promises.show = new Promise(resolve => {
-        Utils.addListener(this.barDom, Utils.animationEndEvents, () => {
-          Utils.removeClass(this.barDom, this.options.animation.open)
-          resolve()
-        })
-      })
-    }
+    })
 
     this.promises.show.then(() => {
       const _t = this
@@ -238,27 +230,17 @@ export default class Noty {
 
     this.closing = true
 
-    if (this.options.animation.close === null || this.options.animation.close === false) {
-      this.promises.close = new Promise(resolve => {
+    Utils.addClass(this.barDom, this.options.animation.close)
+    this.promises.close = new Promise(resolve => {
+      Utils.addListener(this.barDom, 'animationend', () => {
+        if (this.options.first) {
+          Utils.remove(this.barDom)
+        } else {
+          API.ghostFix(this)
+        }
         resolve()
       })
-    } else if (typeof this.options.animation.close === 'function') {
-      this.promises.close = new Promise(
-        this.options.animation.close.bind(this)
-      )
-    } else {
-      Utils.addClass(this.barDom, this.options.animation.close)
-      this.promises.close = new Promise(resolve => {
-        Utils.addListener(this.barDom, Utils.animationEndEvents, () => {
-          if (this.options.first) {
-            Utils.remove(this.barDom)
-          } else {
-            API.ghostFix(this)
-          }
-          resolve()
-        })
-      })
-    }
+    })
 
     this.promises.close.then(() => {
       API.closeFlow(this)
