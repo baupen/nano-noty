@@ -68,7 +68,7 @@ export function ghostFix(ref) {
   Utils.remove(ref.barDom)
   ghost = document.getElementById(ghostID)
   Utils.addClass(ghost, 'noty_fix_effects_height')
-  Utils.addListener(ghost, Utils.animationEndEvents, () => {
+  Utils.addListener(ghost, 'animationend', () => {
     Utils.remove(ghost)
   })
 }

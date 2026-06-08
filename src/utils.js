@@ -1,33 +1,7 @@
-export const animationEndEvents = 'webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend'
-
-export function inArray (needle, haystack, argStrict) {
-  let key
-  let strict = !!argStrict
-
-  if (strict) {
-    for (key in haystack) {
-      if (haystack.hasOwnProperty(key) && haystack[key] === needle) {
-        return true
-      }
-    }
-  } else {
-    for (key in haystack) {
-      if (haystack.hasOwnProperty(key) && haystack[key] === needle) {
-        return true
-      }
-    }
-  }
-  return false
-}
-
-export function stopPropagation (evt) {
+export function stopPropagation(evt) {
   evt = evt || window.event
 
-  if (typeof evt.stopPropagation !== 'undefined') {
-    evt.stopPropagation()
-  } else {
-    evt.cancelBubble = true
-  }
+  evt.stopPropagation()
 }
 
 export const deepExtend = function (out) {
@@ -54,7 +28,7 @@ export const deepExtend = function (out) {
   return out
 }
 
-export function generateID (prefix = '') {
+export function generateID(prefix = '') {
   let id = `noty_${prefix}_`
 
   id += 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
@@ -66,7 +40,7 @@ export function generateID (prefix = '') {
   return id
 }
 
-export function outerHeight (el) {
+export function outerHeight(el) {
   let height = el.offsetHeight
   let style = window.getComputedStyle(el)
 
@@ -78,7 +52,7 @@ export let css = (function () {
   let cssPrefixes = ['Webkit', 'O', 'Moz', 'ms']
   let cssProps = {}
 
-  function camelCase (string) {
+  function camelCase(string) {
     return string
       .replace(/^-ms-/, 'ms-')
       .replace(/-([\da-z])/gi, function (match, letter) {
@@ -86,7 +60,7 @@ export let css = (function () {
       })
   }
 
-  function getVendorProp (name) {
+  function getVendorProp(name) {
     let style = document.body.style
     if (name in style) return name
 
@@ -102,12 +76,12 @@ export let css = (function () {
     return name
   }
 
-  function getStyleProp (name) {
+  function getStyleProp(name) {
     name = camelCase(name)
     return cssProps[name] || (cssProps[name] = getVendorProp(name))
   }
 
-  function applyCss (element, prop, value) {
+  function applyCss(element, prop, value) {
     prop = getStyleProp(prop)
     element.style[prop] = value
   }
@@ -132,7 +106,7 @@ export let css = (function () {
   }
 })()
 
-export function addListener (el, events, cb, useCapture = false) {
+export function addListener(el, events, cb, useCapture = false) {
   events = events.split(' ')
   for (let i = 0; i < events.length; i++) {
     if (document.addEventListener) {
@@ -143,12 +117,12 @@ export function addListener (el, events, cb, useCapture = false) {
   }
 }
 
-export function hasClass (element, name) {
+export function hasClass(element, name) {
   let list = typeof element === 'string' ? element : classList(element)
   return list.indexOf(' ' + name + ' ') >= 0
 }
 
-export function addClass (element, name) {
+export function addClass(element, name) {
   let oldList = classList(element)
   let newList = oldList + name
 
@@ -158,7 +132,7 @@ export function addClass (element, name) {
   element.className = newList.substring(1)
 }
 
-export function removeClass (element, name) {
+export function removeClass(element, name) {
   let oldList = classList(element)
   let newList
 
@@ -171,20 +145,20 @@ export function removeClass (element, name) {
   element.className = newList.substring(1, newList.length - 1)
 }
 
-export function remove (element) {
+export function remove(element) {
   if (element.parentNode) {
     element.parentNode.removeChild(element)
   }
 }
 
-export function classList (element) {
+export function classList(element) {
   return (' ' + ((element && element.className) || '') + ' ').replace(
     /\s+/gi,
     ' '
   )
 }
 
-export function createAudioElements (ref) {
+export function createAudioElements(ref) {
   if (ref.hasSound) {
     const audioElement = document.createElement('audio')
 
@@ -214,6 +188,6 @@ export function createAudioElements (ref) {
   }
 }
 
-function getExtension (fileName) {
+function getExtension(fileName) {
   return fileName.match(/\.([^.]+)$/)[1]
 }

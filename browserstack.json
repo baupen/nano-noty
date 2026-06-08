@@ -3,12 +3,6 @@
   "test_path": "test/index.html",
   "browsers": [
     {
-      "browser": "ie",
-      "browser_version": "10",
-      "os": "Windows",
-      "os_version": "8"
-    },
-    {
       "browser": "edge",
       "browser_version": "latest",
       "os": "Windows",
