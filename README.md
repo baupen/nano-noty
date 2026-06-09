@@ -2,7 +2,7 @@
 
 **Nano-Noty** is a notification library that makes it easy to create **alert** - **success** - **error** - **warning** - **information** messages. Based on [Noty](https://ned.im/noty/), but only with the core features.
 
-You can try it out [here](https://nanonoty.netlify.app/). Features include:
+You can try it out [here](https://baupen.github.io/nano-noty/). Features include:
 - Tiny and dependency-free
 - Many types (`success`, `error`, ...), layouts (`topRight`, `bottomRight`, ...) and themes (`bootstrap`, `light`, ...)
 - Timed notifications with a progress bar counting down
