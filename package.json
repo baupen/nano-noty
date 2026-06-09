@@ -20,6 +20,14 @@
     "src",
     "index.d.ts"
   ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/baupen/nano-noty.git"
+  },
+  "bugs": {
+    "url": "https://github.com/baupen/nano-noty/issues"
+  },
+  "homepage": "https://github.com/baupen/nano-noty#readme",
   "license": "MIT",
   "scripts": {
     "build": "webpack --mode production",
