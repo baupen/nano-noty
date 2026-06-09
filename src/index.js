@@ -273,7 +273,7 @@ export default class Noty {
    * @return {Noty}
    */
   static overrideDefaults(obj) {
-    API.Defaults = Utils.deepExtend({}, API.Defaults, obj)
+    Object.assign(API.Defaults, Utils.deepExtend({}, API.Defaults, obj))
     return this
   }
 

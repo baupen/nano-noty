@@ -3,6 +3,9 @@ const createFirstCheckbox = document.querySelector('#createFirst');
 const closeAllButton = document.querySelector('#closeAll');
 
 Noty.setMaxVisible(5);
+Noty.overrideDefaults({
+  progressBar: true,
+});
 
 const createNoty = (first = false) => {
   const text = document.querySelector('#text').value.trim() || 'Hello from Noty!';
