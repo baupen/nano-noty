@@ -35,6 +35,7 @@
     "sass": "^1.100.0",
     "sass-loader": "^17.0.0",
     "webpack": "^5.107.2",
-    "webpack-cli": "^7.0.3"
+    "webpack-cli": "^7.0.3",
+    "webpack-remove-empty-scripts": "^1.1.1"
   }
 }
