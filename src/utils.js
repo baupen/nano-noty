@@ -1,9 +1,3 @@
-export function stopPropagation(evt) {
-  evt = evt || window.event
-
-  evt.stopPropagation()
-}
-
 export const deepExtend = function (out) {
   out = out || {}
 
@@ -156,36 +150,6 @@ export function classList(element) {
     /\s+/gi,
     ' '
   )
-}
-
-export function createAudioElements(ref) {
-  if (ref.hasSound) {
-    const audioElement = document.createElement('audio')
-
-    ref.options.sounds.sources.forEach(s => {
-      const source = document.createElement('source')
-      source.src = s
-      source.type = `audio/${getExtension(s)}`
-      audioElement.appendChild(source)
-    })
-
-    if (ref.barDom) {
-      ref.barDom.appendChild(audioElement)
-    } else {
-      document.querySelector('body').appendChild(audioElement)
-    }
-
-    audioElement.volume = ref.options.sounds.volume
-
-    if (!ref.soundPlayed) {
-      audioElement.play()
-      ref.soundPlayed = true
-    }
-
-    audioElement.onended = function () {
-      remove(audioElement)
-    }
-  }
 }
 
 function getExtension(fileName) {

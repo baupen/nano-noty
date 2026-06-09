@@ -73,13 +73,15 @@ export default class Noty {
       this.barDom,
       'click',
       e => {
-        Utils.stopPropagation(e)
+        e.stopPropagation()
         this.close()
       },
       false
     )
 
-    if (this.options.timeout) Utils.addClass(this.barDom, 'noty_has_timeout')
+    if (this.options.timeout) {
+      Utils.addClass(this.barDom, 'noty_has_timeout')
+    }
     if (this.options.progressBar) {
       Utils.addClass(this.barDom, 'noty_has_progressbar')
     }
