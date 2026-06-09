@@ -50,5 +50,6 @@ $ npm run build
 - [x] QUnit
 - [x] BrowserStack
 - [x] Pre-commit tests
+- [x] docsify docs
 
 [![JavaScript Style Guide](https://cdn.rawgit.com/feross/standard/master/badge.svg)](https://github.com/feross/standard)

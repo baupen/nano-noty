@@ -20,30 +20,21 @@
     "src",
     "index.d.ts"
   ],
-  "bugs": {
-    "url": "https://github.com/baupen/nano-noty/issues"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git://github.com/baupen/nano-noty.git"
-  },
-  "authors": [
-    {
-      "name": "Nedim Arabacı",
-      "url": "http://ned.im"
-    },{
-      "name": "Florian Moser",
-      "url": "https://famoser.ch"
-    }
-  ],
   "license": "MIT",
   "scripts": {
-    "build": "grunt themes && webpack --env dev && webpack --env build && grunt banner",
-    "dev": "grunt themes && webpack --progress --colors --watch --env dev",
-    "format": "prettier-standard 'src/**/*.js'",
-    "test": "npm run format && standard && grunt test",
-    "serve-docs": "docsify start ./docs"
+    "build": "webpack --mode production",
+    "build:dev": "webpack --mode development",
+    "dev": "webpack --mode development --watch"
   },
   "devDependencies": {
+    "@babel/core": "^7.29.7",
+    "@babel/preset-env": "^7.29.7",
+    "babel-loader": "^10.1.1",
+    "css-loader": "^7.1.4",
+    "mini-css-extract-plugin": "^2.10.2",
+    "sass": "^1.100.0",
+    "sass-loader": "^17.0.0",
+    "webpack": "^5.107.2",
+    "webpack-cli": "^7.0.3"
   }
 }
