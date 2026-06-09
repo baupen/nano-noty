@@ -8,6 +8,11 @@
   <link rel="stylesheet" href="styles/bootstrap.min.css"/>
   <link rel="stylesheet" href="../lib/noty.css"/>
   <link rel="stylesheet" href="../lib/themes/mint.css"/>
+  <link rel="stylesheet" href="../lib/themes/relax.css"/>
+  <link rel="stylesheet" href="../lib/themes/sunset.css"/>
+  <link rel="stylesheet" href="../lib/themes/semanticui.css"/>
+  <link rel="stylesheet" href="../lib/themes/bootstrap-v3.css"/>
+  <link rel="stylesheet" href="../lib/themes/bootstrap-v4.css"/>
   <link rel="stylesheet" href="styles/main.css"/>
 </head>
 <body>
@@ -21,7 +26,6 @@
           <p class="text-body-secondary mb-4">
             Create a notification using the controls below.
           </p>
-
           <form id="notyForm" class="row g-3">
             <div class="col-12">
               <label for="text" class="form-label">Text</label>
@@ -57,11 +61,23 @@
               </select>
             </div>
 
-            <div class="col-12 d-flex gap-2">
+            <div class="col-12 d-flex flex-wrap align-items-center gap-2">
               <button type="submit" class="btn btn-primary">CREATE</button>
               <button type="button" class="btn btn-outline-secondary" id="closeAll">
                 Close all
               </button>
+
+              <div class="ms-sm-auto">
+                <label for="theme" class="visually-hidden">Theme</label>
+                <select class="form-select form-select-sm w-auto" id="theme">
+                  <option value="mint" selected>mint theme</option>
+                  <option value="relax">relax theme</option>
+                  <option value="sunset">sunset theme</option>
+                  <option value="semanticui">semanticui theme</option>
+                  <option value="bootstrap-v3">bootstrap-v3 theme</option>
+                  <option value="bootstrap-v4">bootstrap-v4 theme</option>
+                </select>
+              </div>
             </div>
           </form>
         </div>

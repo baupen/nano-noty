@@ -3,9 +3,7 @@ const closeAllButton = document.querySelector('#closeAll');
 
 Noty.setMaxVisible(5);
 
-form.addEventListener('submit', event => {
-  event.preventDefault();
-
+const createNoty = (first = false) => {
   const text = document.querySelector('#text').value.trim() || 'Hello from Noty!';
   const timeoutValue = Number(document.querySelector('#timeout').value);
   const timeout = timeoutValue > 0 ? timeoutValue : false;
@@ -13,11 +11,18 @@ form.addEventListener('submit', event => {
   new Noty({
     text,
     timeout,
+    first,
     type: document.querySelector('#type').value,
     layout: 'topRight',
-    theme: 'mint',
+    theme: document.querySelector('#theme').value,
     progressBar: Boolean(timeout)
   }).show();
+};
+
+form.addEventListener('submit', event => {
+  event.preventDefault();
+  createNoty();
+});
 });
 
 closeAllButton.addEventListener('click', () => {
