@@ -1,0 +1,50 @@
+/*!*****************************************************************************************************************************!*\
+  !*** css ./node_modules/css-loader/dist/cjs.js!./node_modules/sass-loader/dist/cjs/index.js!./src/themes/bootstrap-v5.scss ***!
+  \*****************************************************************************************************************************/
+.noty_theme__bootstrap-v5.noty_bar {
+  --bs-bar-spacer: 0.25rem;
+  --bs-bar-body-spacer-y: 1rem;
+  --bs-bar-body-spacer-x: 1rem;
+  margin: var(--bs-bar-spacer) 0;
+  overflow: hidden;
+  position: relative;
+  border: var(--bs-border-width) var(--bs-border-style) var(--bs-border-color);
+}
+.noty_theme__bootstrap-v5.noty_bar .noty_body {
+  padding: var(--bs-bar-body-spacer-y) var(--bs-bar-body-spacer-x);
+}
+
+.noty_theme__bootstrap-v5.noty_type__alert,
+.noty_theme__bootstrap-v5.noty_type__notification {
+  background-color: var(--bs-body-bg);
+  color: inherit;
+  border-color: var(--bs-border-color);
+}
+
+.noty_theme__bootstrap-v5.noty_type__warning {
+  background-color: var(--bs-warning-bg-subtle);
+  color: var(--bs-warning-text-emphasis);
+  border-color: var(--bs-warning-border-subtle);
+}
+
+.noty_theme__bootstrap-v5.noty_type__error,
+.noty_theme__bootstrap-v5.noty_type__danger {
+  background-color: var(--bs-danger-bg-subtle);
+  color: var(--bs-danger-text-emphasis);
+  border-color: var(--bs-danger-border-subtle);
+}
+
+.noty_theme__bootstrap-v5.noty_type__info,
+.noty_theme__bootstrap-v5.noty_type__information {
+  background-color: var(--bs-info-bg-subtle);
+  color: var(--bs-info-text-emphasis);
+  border-color: var(--bs-info-border-subtle);
+}
+
+.noty_theme__bootstrap-v5.noty_type__success {
+  background-color: var(--bs-success-bg-subtle);
+  color: var(--bs-success-text-emphasis);
+  border-color: var(--bs-success-border-subtle);
+}
+
+/*# sourceMappingURL=bootstrap-v5.css.map*/
