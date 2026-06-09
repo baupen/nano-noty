@@ -1,6 +1,6 @@
 {
   "name": "nano-noty",
-  "version": "4.0.0",
+  "version": "4.0.1",
   "title": "Nano-Noty - Dependency-free notification library",
   "description": "Nano-Noty is a dependency-free notification library that makes it easy to create alert - success - error - warning - information - confirmation messages.",
   "main": "lib/noty.js",
