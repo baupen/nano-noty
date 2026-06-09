@@ -27,6 +27,11 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+      - name: Copy lib inside of demo folder
+        run: |
+          cp -r lib demo/
+          sed -i 's|../lib|lib|g' demo/index.html
+
       - name: Setup Pages
         uses: actions/configure-pages@v5
       - name: Upload artifact

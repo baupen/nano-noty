@@ -25,7 +25,7 @@ module.exports = function (_, argv) {
       ...themeEntries
     },
     output: {
-      path: path.resolve(__dirname, 'demo/lib'),
+      path: path.resolve(__dirname, 'lib'),
       filename: '[name].js',
       library: {
         name: 'Noty',
