@@ -39,11 +39,7 @@ export default class Noty {
       return this // preventing multiple show
     }
 
-    let queueCounts = API.Queue.queue.length
-
-    if (
-      queueCounts.current >= queueCounts.maxVisible
-    ) {
+    if (API.Queue.currentlyVisible >= API.Queue.maxVisible) {
       API.addToQueue(this)
 
       return this
@@ -52,6 +48,7 @@ export default class Noty {
     API.Store[this.id] = this
 
     this.showing = true
+    API.Queue.currentlyVisible++
 
     if (this.closing) {
       this.showing = false
@@ -244,6 +241,7 @@ export default class Noty {
     })
 
     this.closed = true
+    API.Queue.currentlyVisible--
 
     return this
   }

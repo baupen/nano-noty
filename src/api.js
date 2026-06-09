@@ -3,6 +3,7 @@ import * as Utils from 'utils'
 export const DefaultMaxVisible = 5
 
 export const Queue = {
+  currentlyVisible: 0,
   maxVisible: DefaultMaxVisible,
   queue: []
 }
