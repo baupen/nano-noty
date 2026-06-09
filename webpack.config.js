@@ -1,15 +1,32 @@
+const fs = require('fs')
 const path = require('path')
 const MiniCssExtractPlugin = require('mini-css-extract-plugin')
+const RemoveEmptyScriptsPlugin = require('webpack-remove-empty-scripts')
+
+const themesPath = path.resolve(__dirname, 'src/themes')
+
+const themeEntries = fs
+  .readdirSync(themesPath)
+  .reduce((entries, file) => {
+    const name = path.basename(file, '.scss')
+
+    entries[`themes/${name}`] = path.resolve(themesPath, file)
+
+    return entries
+  }, {})
 
 module.exports = function (_, argv) {
   const isProduction = argv.mode === 'production'
 
   return {
     mode: isProduction ? 'production' : 'development',
-    entry: path.resolve(__dirname, 'src/index.js'),
+    entry: {
+      noty: path.resolve(__dirname, 'src/index.js'),
+      ...themeEntries
+    },
     output: {
       path: path.resolve(__dirname, 'lib'),
-      filename: 'noty.js',
+      filename: '[name].js',
       library: {
         name: 'Noty',
         type: 'umd',
@@ -55,13 +72,14 @@ module.exports = function (_, argv) {
       ]
     },
     plugins: [
+      new RemoveEmptyScriptsPlugin(),
       new MiniCssExtractPlugin({
-        filename: 'noty.css'
+        filename: '[name].css'
       })
     ],
     optimization: {
       minimize: isProduction
     },
-    devtool: isProduction ? false : 'source-map',
+    devtool: isProduction ? false : 'source-map'
   }
 }
