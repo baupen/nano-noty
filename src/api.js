@@ -12,7 +12,7 @@ export const Store = {}
 export let Defaults = {
   type: 'alert',
   layout: 'topRight',
-  theme: 'mint',
+  theme: 'boostrap-v5',
   text: '',
   timeout: false,
   progressBar: true,
@@ -22,7 +22,6 @@ export let Defaults = {
   },
   id: false,
   first: false,
-  queue: 'global',
   container: false,
 }
 

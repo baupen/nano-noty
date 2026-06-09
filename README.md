@@ -4,7 +4,7 @@
 
 You can try it out [here](https://nanonoty.netlify.app/). Features include:
 - Tiny and dependency-free
-- Multiple types (success, warning, error, ...), layouts (topRight, bottomRight, ...) and themes (mint, semanicui, bootstrap, ...)
+- Many types (`success`, `error`, ...), layouts (`topRight`, `bottomRight`, ...) and themes (`bootstrap`, `light`, ...)
 - Timed notifications with a progress bar counting down
 - Important notifications placed first in queue
 - Custom themes and custom animations.
@@ -76,7 +76,7 @@ new Noty({
 | `text` | `string` | `""` | The notification message text |
 | `type` | `'alert' \| 'success' \| 'warning' \| 'error' \| 'info' \| 'information'` | `'alert'` | The notification type/style |
 | `layout` | `'top' \| 'topLeft' \| 'topCenter' \| 'topRight' \| 'center' \| 'centerLeft' \| 'centerRight' \| 'bottom' \| 'bottomLeft' \| 'bottomCenter' \| 'bottomRight'` | `'topRight'` | Position where the notification appears |
-| `theme` | `string` | `'mint'` | Theme name (e.g., 'mint', 'relax', 'sunset', 'semanticui', 'bootstrap-v3', 'bootstrap-v4', 'bootstrap-v5') |
+| `theme` | `string` | `'boostrap-v5'` | Theme name (e.g., 'mint', 'relax', 'sunset', 'semanticui', 'bootstrap-v3', 'bootstrap-v4', 'bootstrap-v5') |
 | `timeout` | `false \| number` | `false` | Duration in milliseconds before auto-close. Set to `false` to disable auto-close |
 | `progressBar` | `boolean` | `false` | Show countdown progress bar (only works if `timeout` is a number) |
 | `animation` | `object` | `{ open: null, close: null }` | Custom animation settings with `open` and `close` properties |
