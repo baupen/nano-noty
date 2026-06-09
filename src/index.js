@@ -1,7 +1,4 @@
-/* global VERSION */
-
 import 'noty.scss'
-import Promise from 'es6-promise'
 import * as Utils from 'utils'
 import * as API from 'api'
 
