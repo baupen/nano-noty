@@ -60,23 +60,30 @@
                 <option value="information">information</option>
               </select>
             </div>
-
             <div class="col-12 d-flex flex-wrap align-items-center gap-2">
-              <button type="submit" class="btn btn-primary">CREATE</button>
-              <button type="button" class="btn btn-outline-secondary" id="closeAll">
-                Close all
-              </button>
-
-              <div class="ms-sm-auto">
+              <div class="d-flex align-items-center gap-3">
+                <button type="submit" class="btn btn-primary">CREATE</button>
+                <div class="form-check">
+                  <input type="checkbox" class="form-check-input" id="createFirst">
+                  <label class="form-check-label" for="createFirst">
+                    First
+                  </label>
+                </div>
                 <label for="theme" class="visually-hidden">Theme</label>
                 <select class="form-select form-select-sm w-auto" id="theme">
                   <option value="mint" selected>mint theme</option>
                   <option value="relax">relax theme</option>
                   <option value="sunset">sunset theme</option>
-                  <option value="semanticui">semanticui theme</option>
-                  <option value="bootstrap-v3">bootstrap-v3 theme</option>
-                  <option value="bootstrap-v4">bootstrap-v4 theme</option>
+                  <option value="semanticui">semanticui</option>
+                  <option value="bootstrap-v3">bootstrap-v3</option>
+                  <option value="bootstrap-v4">bootstrap-v4</option>
                 </select>
+              </div>
+
+              <div class="ms-sm-auto">
+                <button type="button" class="btn btn-outline-secondary" id="closeAll">
+                  Close all
+                </button>
               </div>
             </div>
           </form>

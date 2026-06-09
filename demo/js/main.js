@@ -1,4 +1,5 @@
 const form = document.querySelector('#notyForm');
+const createFirstCheckbox = document.querySelector('#createFirst');
 const closeAllButton = document.querySelector('#closeAll');
 
 Noty.setMaxVisible(5);
@@ -21,8 +22,7 @@ const createNoty = (first = false) => {
 
 form.addEventListener('submit', event => {
   event.preventDefault();
-  createNoty();
-});
+  createNoty(createFirstCheckbox.checked);
 });
 
 closeAllButton.addEventListener('click', () => {
